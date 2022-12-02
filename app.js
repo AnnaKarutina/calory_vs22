@@ -48,6 +48,13 @@ const ItemCtrl = (function (){
 })();
 
 const UICtrl = (function (){
+    const UISelectors = {
+        itemList: '#item-list',
+        itemNameInput: '#item-name',
+        itemCaloriesInput: '#item-calories',
+        addBtn: '.add-btn'
+    }
+
     return{
         populateItemList: function (items){
             let html = ''
@@ -59,7 +66,7 @@ const UICtrl = (function (){
                          </a>
                          </li>`
             })
-            document.querySelector('ul').innerHTML = html
+            document.querySelector(UISelectors.itemList).innerHTML = html
         },
         showTotalCalories: function (totalCalories){
             document.querySelector('.total-calories').textContent = totalCalories
@@ -86,6 +93,9 @@ const UICtrl = (function (){
         clearInput: function (){
             document.querySelector('#item-name').value = ''
             document.querySelector('#item-calories').value = ''
+        },
+        getSelectors: function (){
+            return UISelectors
         }
     }
 })()
@@ -140,17 +150,16 @@ const App = (function (){
         UICtrl.showTotalCalories(totalCalories)
     }
 
+    const loadEventListeners = function (){
+        const UISelectors = UICtrl.getSelectors()
+
+        document.addEventListener('DOMContentLoaded', getItemsFromStorage)
+        document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit)
+    }
+
     return{
         init: function (){
-            document.addEventListener('DOMContentLoaded', getItemsFromStorage)
-
-            // const items = ItemCtrl.getItems()
-            // console.log(items)
-            // UICtrl.populateItemList(items)
-            // const totalCalories = ItemCtrl.getTotalCalories()
-            // UICtrl.showTotalCalories(totalCalories)
-
-            document.querySelector('.add-btn').addEventListener('click', itemAddSubmit)
+            loadEventListeners()
         }
     }
 })(ItemCtrl, UICtrl, StorageCtrl)
